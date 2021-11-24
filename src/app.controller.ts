@@ -22,7 +22,7 @@ export class AppController {
     this.clientAdminBackend = ClientProxyFactory.create({
       transport: Transport.RMQ,
       options: {
-        urls: ['amqp://user:uyH7hUdlwR7f@54.163.11.175:5672/smartranking'],
+        urls: ['amqp://user:<rabbitpass>@<ip>:5672/<host>'],
         queue: 'admin-backend',
       },
     });
