@@ -10,7 +10,7 @@ import {
 import {
   ClientProxy,
   ClientProxyFactory,
-  Transport,
+  // Transport,
 } from '@nestjs/microservices';
 import { CriarCategoriaDto } from './dto/criar-categoria.dto';
 
@@ -20,10 +20,10 @@ export class AppController {
   private clientAdminBackend: ClientProxy;
   constructor() {
     this.clientAdminBackend = ClientProxyFactory.create({
-      transport: Transport.RMQ,
+      transport: +process.env.TRANSPORT,
       options: {
-        urls: ['amqp://user:<rabbitpass>@<ip>:5672/<host>'],
-        queue: 'admin-backend',
+        urls: [process.env.SERVER_URL],
+        queue: process.env.QUEUE_NAME,
       },
     });
   }
@@ -31,7 +31,9 @@ export class AppController {
   @Post('categorias')
   @UsePipes(ValidationPipe)
   async criarCategoria(@Body() criarCategoriaDto: CriarCategoriaDto) {
-    this.logger.debug(`categoria recebida: ${criarCategoriaDto}`);
+    this.logger.debug(
+      `categoria recebida: ${JSON.stringify(criarCategoriaDto)}`,
+    );
     return this.clientAdminBackend.emit('criar-categoria', criarCategoriaDto);
   }
 }
