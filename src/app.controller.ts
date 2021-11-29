@@ -1,17 +1,12 @@
 import {
   Body,
   Controller,
-  Get,
   Logger,
   Post,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import {
-  ClientProxy,
-  ClientProxyFactory,
-  // Transport,
-} from '@nestjs/microservices';
+import { ClientProxy, ClientProxyFactory } from '@nestjs/microservices';
 import { CriarCategoriaDto } from './dto/criar-categoria.dto';
 
 @Controller('api/v1')
