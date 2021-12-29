@@ -12,11 +12,11 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { CriarCategoriaDto } from 'src/categorias/dtos/criar-categoria.dto';
 import { lastValueFrom, Observable } from 'rxjs';
 import { ProxyrmqService } from '../proxyrmq/proxyrmq.service';
 import { AtualizarJogadorDto } from './dtos/atualizar-jogador.dto';
 import { ValidacaoParametrosPipe } from '../common/pipes/validacao-parametros-pipe';
+import { CriarJogadorDto } from './dtos/criar-jogador.dto';
 
 @Controller('api/v1/jogadores')
 export class JogadoresController {
@@ -29,11 +29,8 @@ export class JogadoresController {
 
   @Post()
   @UsePipes(ValidationPipe)
-  async criarJogador(@Body() criaJogadorDto: CriarCategoriaDto) {
+  async criarJogador(@Body() criaJogadorDto: CriarJogadorDto) {
     this.logger.log(`criarJogadorDto: ${JSON.stringify(criaJogadorDto)}`);
-    // const categoria = await this.clienteAdminBackend
-    //   .send('consultar-categorias', criaJogadorDto.categoria)
-    //   .toPromise();
 
     const categoria = await lastValueFrom(
       this.clienteAdminBackend.send(
@@ -58,10 +55,6 @@ export class JogadoresController {
     @Body() atualizaJogadorDto: AtualizarJogadorDto,
     @Param('_id', ValidacaoParametrosPipe) _id: string,
   ) {
-    // const categoria = await this.clienteAdminBackend
-    //   .send('consultar-categorias', atualizaJogadorDto.categoria)
-    //   .toPromise();
-
     const categoria = await lastValueFrom(
       this.clienteAdminBackend.send(
         'consultar-categorias',
@@ -72,12 +65,12 @@ export class JogadoresController {
     if (categoria)
       this.clienteAdminBackend.emit('atualizar-jogador', {
         id: _id,
-        jogador: AtualizarJogadorDto,
+        jogador: atualizaJogadorDto,
       });
     else throw new BadRequestException('Categoria não cadastrada');
   }
 
-  @Delete('/:id')
+  @Delete('/:_id')
   async deletarJogador(@Param('_id', ValidacaoParametrosPipe) _id: string) {
     this.clienteAdminBackend.emit('deletar-jogador', { _id });
   }

@@ -35,7 +35,8 @@ export class CategoriasController {
   }
 
   @Get('categorias')
-  consultarCategorias(@Query('id') _id: string): Observable<any> {
+  consultarCategorias(@Query('_id') _id: string): Observable<any> {
+    console.log(_id);
     return this.clientAdminBackend.send('consultar-categorias', _id ? _id : '');
   }
 
