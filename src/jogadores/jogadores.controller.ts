@@ -9,20 +9,27 @@ import {
   Post,
   Put,
   Query,
+  UploadedFile,
+  UseInterceptors,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { lastValueFrom, Observable } from 'rxjs';
+import { firstValueFrom, lastValueFrom, Observable } from 'rxjs';
 import { ProxyrmqService } from '../proxyrmq/proxyrmq.service';
 import { AtualizarJogadorDto } from './dtos/atualizar-jogador.dto';
 import { ValidacaoParametrosPipe } from '../common/pipes/validacao-parametros-pipe';
 import { CriarJogadorDto } from './dtos/criar-jogador.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { AwsService } from '../aws/aws.service';
 
 @Controller('api/v1/jogadores')
 export class JogadoresController {
   private logger = new Logger(JogadoresController.name);
 
-  constructor(private clientProxySmartRanking: ProxyrmqService) {}
+  constructor(
+    private clientProxySmartRanking: ProxyrmqService,
+    private awsService: AwsService,
+  ) {}
 
   private clienteAdminBackend =
     this.clientProxySmartRanking.getClientProxyAdminBackendInstance();
@@ -42,6 +49,32 @@ export class JogadoresController {
     if (categoria)
       this.clienteAdminBackend.emit('criar-jogador', criaJogadorDto);
     else throw new BadRequestException('categoria não cadastrada');
+  }
+
+  @Post('/:_id/upload')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadArquivo(@UploadedFile() file, @Param('_id') _id: string) {
+    this.logger.log(`${JSON.stringify(file.originalname)} - ${_id}}`);
+    const jogador = await lastValueFrom(
+      this.clienteAdminBackend.send('consultar-jogadores', _id),
+    );
+
+    if (!jogador) throw new BadRequestException(`Jogador não encontrado!`);
+    const awsResponse = await this.awsService.uploadArquivo(file, _id);
+    const atualizarAvatarJogador: AtualizarJogadorDto = {};
+    atualizarAvatarJogador.urlFotoJogador = awsResponse.Location;
+    if (awsResponse && awsResponse.Location) {
+      this.clienteAdminBackend.emit('atualizar-jogador', {
+        id: _id,
+        jogador: atualizarAvatarJogador,
+      });
+      jogador.urlFotoJogador = awsResponse.Location;
+    }
+
+    // return await firstValueFrom(
+    //   this.clienteAdminBackend.send('consultar-jogadores', _id),
+    // );
+    return jogador;
   }
 
   @Get()

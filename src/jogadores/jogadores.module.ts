@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
-import { ProxyrmqModule } from 'src/proxyrmq/proxyrmq.module';
+import { ProxyrmqModule } from '../proxyrmq/proxyrmq.module';
 import { JogadoresController } from './jogadores.controller';
+import { AwsModule } from '../aws/aws.module';
 
 @Module({
-  imports: [ProxyrmqModule],
+  imports: [ProxyrmqModule, AwsModule],
   controllers: [JogadoresController],
 })
 export class JogadoresModule {}

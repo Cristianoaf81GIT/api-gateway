@@ -4,6 +4,7 @@ import { CategoriasModule } from './categorias/categorias.module';
 import { ProxyrmqModule } from './proxyrmq/proxyrmq.module';
 import { ProxyrmqService } from './proxyrmq/proxyrmq.service';
 import { JogadoresModule } from './jogadores/jogadores.module';
+import { AwsModule } from './aws/aws.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { JogadoresModule } from './jogadores/jogadores.module';
     CategoriasModule,
     ProxyrmqModule,
     JogadoresModule,
+    AwsModule,
   ],
   providers: [ProxyrmqService],
 })

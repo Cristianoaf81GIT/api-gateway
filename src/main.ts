@@ -10,11 +10,17 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalFilters(new AllExceptionsFilter());
   app.useGlobalInterceptors(new LogginInterceptor(), new TimeoutInterceptor());
-  Date.prototype.toJSON = (): string =>
-    format(this, 'yyyy-MM-dd HH:mm:ss.SS', {
-      timeZone: 'America/Sao_Paulo',
-      locale: ptBR,
-    });
+  Date.prototype.toJSON = (): string => {
+    try {
+      return format(this, 'yyyy-MM-dd HH:mm:ss.SS', {
+        timeZone: 'America/Sao_Paulo',
+        locale: ptBR,
+      });
+    } catch (error: unknown) {
+      return this;
+    }
+  };
+
   await app.listen(8081);
 }
 bootstrap();
