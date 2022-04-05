@@ -14,7 +14,7 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { firstValueFrom, lastValueFrom, Observable } from 'rxjs';
+import { lastValueFrom, Observable } from 'rxjs';
 import { ProxyrmqService } from '../proxyrmq/proxyrmq.service';
 import { AtualizarJogadorDto } from './dtos/atualizar-jogador.dto';
 import { ValidacaoParametrosPipe } from '../common/pipes/validacao-parametros-pipe';
