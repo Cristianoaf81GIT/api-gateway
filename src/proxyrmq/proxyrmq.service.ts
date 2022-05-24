@@ -25,4 +25,14 @@ export class ProxyrmqService {
       },
     });
   }
+
+  getClientProxyRankingsInstance(): ClientProxy {
+    return ClientProxyFactory.create({
+      transport: Number(this.configService.get<string>('TRANSPORT_LOCAL')),
+      options: {
+        urls: [`${this.configService.get<string>('SERVER_URL_LOCAL')}`],
+        queue: `${this.configService.get<string>('RANKINGS_QUEUE_NAME')}`,
+      },
+    });
+  }
 }

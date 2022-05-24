@@ -176,7 +176,7 @@ export class DesafiosController {
     partida.desafio = _id;
     partida.jogadores = desafio.jogadores;
     partida.resultado = atribuirDesafioPartidaDto.resultado;
-    await this.clienteDesafios.emit('criar-partida', partida);
+    this.clienteDesafios.emit('criar-partida', partida);
   }
 
   @Delete('/:_id')
@@ -192,7 +192,7 @@ export class DesafiosController {
 
     if (!desafio) throw new BadRequestException(`Desafio não cadastrado!`);
 
-    await this.clienteDesafios.emit('deletar-desafio', desafio);
+    this.clienteDesafios.emit('deletar-desafio', desafio);
   }
 
   // continuar aqui
