@@ -3,6 +3,7 @@ import { Module } from '@nestjs/common';
 // import { DesafiosServiceConfig } from 'src/proxyrmq/desafios.config';
 import { ProxyrmqModule } from '../proxyrmq/proxyrmq.module';
 import { DesafiosController } from './desafios.controller';
+import { DesafiosService } from './desafios.service';
 
 @Module({
   imports: [
@@ -12,5 +13,6 @@ import { DesafiosController } from './desafios.controller';
     // ]),
   ],
   controllers: [DesafiosController],
+  providers: [DesafiosService],
 })
 export class DesafiosModule {}
