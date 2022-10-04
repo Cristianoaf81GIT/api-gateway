@@ -28,7 +28,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       `Http Status: ${status}, Error Message: ${JSON.stringify(message)}`,
     );
 
-    this.logger.debug(`${exception} excessao original`);
+    this.logger.debug(`${JSON.stringify(exception)} excessao original`);
 
     if (message && message.stack) delete message.stack;
     if (message && message.info) delete message.info;

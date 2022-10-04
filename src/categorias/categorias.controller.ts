@@ -30,8 +30,8 @@ export class CategoriasController {
   }
 
   @Get()
-  consultarCategorias(@Query('_id') _id: string) {
-    return this.categoriasService.consultarCategorias(_id);
+  async consultarCategorias(@Query('_id') _id: string) {
+    return (await this.categoriasService.consultarCategorias(_id));
   }
 
   @Put('/:_id')

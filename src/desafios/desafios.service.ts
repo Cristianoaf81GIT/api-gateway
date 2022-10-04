@@ -211,8 +211,19 @@ export class DesafiosService {
 
   }
 
-  // continua em linha 226
-  //https://gitlab.com/dfs-treinamentos/smart-ranking/smart-ranking-microservices/api-gateway/-/blob/aula-micro-notificacoes/src/desafios/desafios.service.ts
-  // async deletarDesafio
+  async deletarDesafio(_id: string) {
+    const desafio = await lastValueFrom(
+      this.clientDesafios.send('consultar-desafios', {idJogador:'' , _id }),
+    );
+
+    /*
+     * Verificamos se o desafio esta cadastrado
+     * */
+    if (!desafio) {
+      throw new BadRequestException('Desafio não cadastrado');
+    }
+
+    await this.clientDesafios.emit('deletar-desafio', desafio);
+  }
 
 }

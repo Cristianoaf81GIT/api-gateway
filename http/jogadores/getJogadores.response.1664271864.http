@@ -1,0 +1,10 @@
+HTTP/1.1 500 Internal Server Error
+X-Powered-By: Express
+Content-Type: application/json; charset=utf-8
+Content-Length: 117
+ETag: W/"75-BXW4UdNj8nxNesykBie+tJ6lz+0"
+Date: Tue, 27 Sep 2022 09:44:24 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"timestamp":"2022-09-27T09:44:24.216Z","path":"/api/v1/jogadores","error":{"err":{"cause":{},"isOperational":true}}}

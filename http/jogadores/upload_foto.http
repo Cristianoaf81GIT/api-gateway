@@ -1,0 +1,1 @@
+POST http://localhost:8081/api/v1/jogadores/61cc48fe25e574315a216eec/upload
