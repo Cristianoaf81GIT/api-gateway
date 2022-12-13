@@ -4,10 +4,8 @@ import { AllExceptionsFilter } from './filters/http-exception.filter';
 import { LogginInterceptor } from './interceptors/logging.interceptor';
 import { TimeoutInterceptor } from './interceptors/timeout.interceptor';
 
-// https://gitlab.com/dfs-treinamentos/smart-ranking/smart-ranking-microservices/api-gateway/-/tree/aula-micro-notificacoes/
-// https://docs.nestjs.com/cli/usages
+// continua em 44:19 src/aws/aws-cognito.service.ts
 
-// continuar prox aula repassar tudo o que foi feito video em 18:20
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalFilters(new AllExceptionsFilter());
