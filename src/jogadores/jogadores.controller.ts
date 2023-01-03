@@ -13,6 +13,8 @@ import {
   UseInterceptors,
   UsePipes,
   ValidationPipe,
+  UseGuards,
+  Req  
 } from '@nestjs/common';
 import { lastValueFrom, Observable } from 'rxjs';
 import { AtualizarJogadorDto } from './dtos/atualizar-jogador.dto';
@@ -20,6 +22,8 @@ import { ValidacaoParametrosPipe } from '../common/pipes/validacao-parametros-pi
 import { CriarJogadorDto } from './dtos/criar-jogador.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { JogadoresService } from './jogadores.service';
+import { AuthGuard  } from '@nestjs/passport';
+import { Request } from 'express';
 
 @Controller('api/v1/jogadores')
 export class JogadoresController {
@@ -42,9 +46,14 @@ export class JogadoresController {
     this.logger.log(`${JSON.stringify(file.originalname)} - ${_id}}`);
     return this.jogadoresService.uploadArquivo(file, _id);
   }
-
+  
+  @UseGuards(AuthGuard('jwt'))
   @Get()
-  async consultarJogadores(@Query('idJogador') _id: string): Promise<Observable<any>> {
+  async consultarJogadores(
+    @Query('idJogador') _id: string,
+    @Req() req: Request,
+  ): Promise<Observable<any>> {
+    this.logger.log(`req: ${JSON.stringify(req.user)}`);
     return (await this.jogadoresService.consultarJogadores(_id));
   }
 

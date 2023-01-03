@@ -8,10 +8,10 @@ import { AwsConfigObject } from './interfaces/aws-config.interface';
 @Injectable()
 export class AwsCognitoConfig {
   
-  private userPoolId: string;
-  private clientId: string;
-  private region: string;
-  private authority: string;
+  public userPoolId: string;
+  public clientId: string;
+  public region: string;
+  public authority: string;
 
   constructor(private configService: ConfigService) {
     this.userPoolId = this.configService.get<string>('AWS_COGNITO_USER_POOL_ID');
