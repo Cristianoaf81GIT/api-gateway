@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 
-import { 
-  CognitoUserPool, 
+import {
+  CognitoUserPool,
   ICognitoUserPoolData,
   CognitoUserAttribute,
   CognitoUser,
-  AuthenticationDetails 
+  AuthenticationDetails,
 } from 'amazon-cognito-identity-js';
 
 import { AuthRegistroUsuarioDto } from '../auth/dtos/auth-registro-usuario.dto';
@@ -14,7 +14,6 @@ import { AuthLoginUsuarioDto } from '../auth/dtos/auth-login-usuario.dto';
 
 @Injectable()
 export class AwsCognitoService {
-  
   private userPool: CognitoUserPool;
   private userPoolConfigData: ICognitoUserPoolData;
 
@@ -24,61 +23,57 @@ export class AwsCognitoService {
   }
 
   async registrarUsuario(authRegistroUsuario: AuthRegistroUsuarioDto) {
-    const { nome, email, senha, telefoneCelular  } = authRegistroUsuario;
-    const userAttributes =  {
-      phoneNumber: new CognitoUserAttribute({ 
-        Name: 'phone_number', 
-        Value: telefoneCelular
+    const { nome, email, senha, telefoneCelular } = authRegistroUsuario;
+    const userAttributes = {
+      phoneNumber: new CognitoUserAttribute({
+        Name: 'phone_number',
+        Value: telefoneCelular,
       }),
       name: new CognitoUserAttribute({
         Name: 'name',
-        Value: nome
+        Value: nome,
       }),
     };
-    
+
     return new Promise((resolve, reject) => {
       this.userPool.signUp(
         email,
         senha,
-        [
-          userAttributes.phoneNumber, 
-          userAttributes.name
-        ],
+        [userAttributes.phoneNumber, userAttributes.name],
         null,
         (err, result) => {
           if (!result || err) {
             reject(err);
           } else {
-            resolve(result.user); 
+            resolve(result.user);
           }
-        }
-      ); 
+        },
+      );
     });
   }
-   
+
   async autenticarUsuario(authLoginUsuarioDto: AuthLoginUsuarioDto) {
     const { email, senha } = authLoginUsuarioDto;
     const userData = {
       Username: email,
-      Pool: this.userPool 
+      Pool: this.userPool,
     };
 
     const userCognito = new CognitoUser(userData);
     const authenticationDetails = new AuthenticationDetails({
       Username: email,
-      Password: senha
+      Password: senha,
     });
-    
+
     return new Promise((resolve, reject) => {
-       userCognito.authenticateUser(authenticationDetails, {
-          onSuccess: (result) => {
-            resolve(result);
-          },
-          onFailure: (err) => {
-            reject(err);
-          }
-       });
+      userCognito.authenticateUser(authenticationDetails, {
+        onSuccess: (result) => {
+          resolve(result);
+        },
+        onFailure: (err) => {
+          reject(err);
+        },
+      });
     });
-    
   }
 }

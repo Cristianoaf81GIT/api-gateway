@@ -4,9 +4,7 @@ import { DesafiosController } from './desafios.controller';
 import { DesafiosService } from './desafios.service';
 
 @Module({
-  imports: [
-    ProxyrmqModule,
-  ],
+  imports: [ProxyrmqModule],
   controllers: [DesafiosController],
   providers: [DesafiosService],
 })

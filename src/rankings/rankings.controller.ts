@@ -12,7 +12,7 @@ export class RankingsController {
   async consultarRankings(
     @Query('idCategoria') idCategoria: string,
     @Query('dataRef') dataRef: string,
-  ): Promise<any> {    
+  ): Promise<any> {
     return this.rankingsService.consultarRankings(idCategoria, dataRef);
   }
 }

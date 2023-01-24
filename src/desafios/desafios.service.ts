@@ -125,39 +125,49 @@ export class DesafiosService {
 
   async atualizarDesafio(
     atualizarDesafioDto: AtualizarDesafioDto,
-    _id: string
+    _id: string,
   ) {
     /*
      * validacoes em relacao ao desafio
-    * */  
-   const desafio: Desafio = await lastValueFrom(
-    this.clientDesafios.send('consultar-desafios', {idJogador: '', _id: _id})
-   );
+     * */
+    const desafio: Desafio = await lastValueFrom(
+      this.clientDesafios.send('consultar-desafios', {
+        idJogador: '',
+        _id: _id,
+      }),
+    );
 
-   this.logger.log(`desafio: ${JSON.stringify(desafio)}`);
-   
-   /* verificamos se o desafio esta cadastrado */
-   if (!desafio) {
-    throw new BadRequestException('Desafio não cadastrado');
-   }
+    this.logger.log(`desafio: ${JSON.stringify(desafio)}`);
 
-   /* somente pode ser atualizado desafio com estatus pendente */
-   if (desafio.status != DesafioStatus.PENDENTE) {
-     throw new BadRequestException('Somente desafios com status PENDENTE poder ser atualizados!');
-   }
+    /* verificamos se o desafio esta cadastrado */
+    if (!desafio) {
+      throw new BadRequestException('Desafio não cadastrado');
+    }
 
-   await this.clientDesafios.emit('atualizar-desafio', {id: _id, desafio: atualizarDesafioDto});
+    /* somente pode ser atualizado desafio com estatus pendente */
+    if (desafio.status != DesafioStatus.PENDENTE) {
+      throw new BadRequestException(
+        'Somente desafios com status PENDENTE poder ser atualizados!',
+      );
+    }
+
+    await this.clientDesafios.emit('atualizar-desafio', {
+      id: _id,
+      desafio: atualizarDesafioDto,
+    });
   }
 
-  
   async atribuirDesafioPartida(
     atribuirDesafioPartidaDto: AtribuirDesafioPartidaDto,
     _id: string,
   ) {
     const desafio: Desafio = await lastValueFrom(
-      this.clientDesafios.send('consultar-desafios', { idJogador: '', _id: _id})
-    ); 
-    
+      this.clientDesafios.send('consultar-desafios', {
+        idJogador: '',
+        _id: _id,
+      }),
+    );
+
     this.logger.log(`desafio: ${JSON.stringify(desafio)}`);
 
     /*
@@ -170,25 +180,25 @@ export class DesafiosService {
     /*
      * verificamos se o desafio ja foi realizado
      * */
-     if (desafio.status == DesafioStatus.REALIZADO) {
+    if (desafio.status == DesafioStatus.REALIZADO) {
       throw new BadRequestException('Desafio já realizado');
-     } 
-    
-     /*
-      * somente deve ser possivel lancar uma partida para desafio aceito
-     * */
-     if (desafio.status != DesafioStatus.ACEITO) {
-      throw new BadRequestException(
-        'Partidas somente podem ser lançadas em desafios aceitos pelos adversários'
-      );
-     }
+    }
 
-     /*
-      * verificamos se o jogador informado faz parte do desafio
+    /*
+     * somente deve ser possivel lancar uma partida para desafio aceito
+     * */
+    if (desafio.status != DesafioStatus.ACEITO) {
+      throw new BadRequestException(
+        'Partidas somente podem ser lançadas em desafios aceitos pelos adversários',
+      );
+    }
+
+    /*
+     * verificamos se o jogador informado faz parte do desafio
      * */
     if (!desafio.jogadores.includes(atribuirDesafioPartidaDto.def)) {
       throw new BadRequestException(
-        'O jogador vencedor da partida deve fazer parte do desafio!'
+        'O jogador vencedor da partida deve fazer parte do desafio!',
       );
     }
 
@@ -208,12 +218,11 @@ export class DesafiosService {
      *enviamos a partida para o topico  'criar-partida'
      * */
     await this.clientDesafios.emit('criar-partida', partida);
-
   }
 
   async deletarDesafio(_id: string) {
     const desafio = await lastValueFrom(
-      this.clientDesafios.send('consultar-desafios', {idJogador:'' , _id }),
+      this.clientDesafios.send('consultar-desafios', { idJogador: '', _id }),
     );
 
     /*
@@ -225,5 +234,4 @@ export class DesafiosService {
 
     await this.clientDesafios.emit('deletar-desafio', desafio);
   }
-
 }

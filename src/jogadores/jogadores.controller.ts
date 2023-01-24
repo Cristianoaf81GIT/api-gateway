@@ -14,7 +14,7 @@ import {
   UsePipes,
   ValidationPipe,
   UseGuards,
-  Req  
+  Req,
 } from '@nestjs/common';
 import { lastValueFrom, Observable } from 'rxjs';
 import { AtualizarJogadorDto } from './dtos/atualizar-jogador.dto';
@@ -22,22 +22,20 @@ import { ValidacaoParametrosPipe } from '../common/pipes/validacao-parametros-pi
 import { CriarJogadorDto } from './dtos/criar-jogador.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { JogadoresService } from './jogadores.service';
-import { AuthGuard  } from '@nestjs/passport';
+import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
 
 @Controller('api/v1/jogadores')
 export class JogadoresController {
   private logger = new Logger(JogadoresController.name);
 
-  constructor(
-    private jogadoresService: JogadoresService,
-  ) {}
-  
+  constructor(private jogadoresService: JogadoresService) {}
+
   @Post()
   @UsePipes(ValidationPipe)
   async criarJogador(@Body() criaJogadorDto: CriarJogadorDto) {
     this.logger.log(`criarJogadorDto: ${JSON.stringify(criaJogadorDto)}`);
-    await this.jogadoresService.criarJogador(criaJogadorDto);    
+    await this.jogadoresService.criarJogador(criaJogadorDto);
   }
 
   @Post('/:_id/upload')
@@ -46,7 +44,7 @@ export class JogadoresController {
     this.logger.log(`${JSON.stringify(file.originalname)} - ${_id}}`);
     return this.jogadoresService.uploadArquivo(file, _id);
   }
-  
+
   @UseGuards(AuthGuard('jwt'))
   @Get()
   async consultarJogadores(
@@ -54,7 +52,7 @@ export class JogadoresController {
     @Req() req: Request,
   ): Promise<Observable<any>> {
     this.logger.log(`req: ${JSON.stringify(req.user)}`);
-    return (await this.jogadoresService.consultarJogadores(_id));
+    return await this.jogadoresService.consultarJogadores(_id);
   }
 
   @Put('/:_id')

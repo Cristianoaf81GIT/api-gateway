@@ -30,9 +30,7 @@ import { DesafiosService } from './desafios.service';
 export class DesafiosController {
   private readonly logger = new Logger(DesafiosController.name);
 
-  constructor(
-     private desafiosService: DesafiosService,     
-  ) {}
+  constructor(private desafiosService: DesafiosService) {}
 
   @Post()
   @UsePipes(ValidationPipe)
@@ -43,15 +41,15 @@ export class DesafiosController {
 
   @Get()
   async consultarDesafios(@Query('idJogador') idJogador: string): Promise<any> {
-    return (await this.desafiosService.consultarDesafios(idJogador));
+    return await this.desafiosService.consultarDesafios(idJogador);
   }
-  
+
   @Put('/:desafio')
   async atualizarDesafio(
     @Body(DesafioStatusValidacaoPipe) atualizarDesafioDto: AtualizarDesafioDto,
     @Param('desafio') _id: string,
   ) {
-    this.desafiosService.atualizarDesafio(atualizarDesafioDto, _id);  
+    this.desafiosService.atualizarDesafio(atualizarDesafioDto, _id);
   }
 
   @Post('/:desafio/partida')
@@ -59,11 +57,14 @@ export class DesafiosController {
     @Body(ValidationPipe) atribuirDesafioPartidaDto: AtribuirDesafioPartidaDto,
     @Param('desafio') _id: string,
   ) {
-    await this.desafiosService.atribuirDesafioPartida(atribuirDesafioPartidaDto, _id);
+    await this.desafiosService.atribuirDesafioPartida(
+      atribuirDesafioPartidaDto,
+      _id,
+    );
   }
 
   @Delete('/:_id')
   async deletarDesafio(@Param('_id') _id: string) {
-   await this.desafiosService.deletarDesafio(_id); 
+    await this.desafiosService.deletarDesafio(_id);
   }
 }

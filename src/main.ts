@@ -8,7 +8,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalFilters(new AllExceptionsFilter());
   app.useGlobalInterceptors(new LogginInterceptor(), new TimeoutInterceptor());
-  
+
   await app.listen(8081);
 }
 bootstrap();
