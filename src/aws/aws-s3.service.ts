@@ -2,6 +2,7 @@ import { BadGatewayException, Injectable, Logger } from '@nestjs/common';
 import * as aws from 'aws-sdk';
 import { AwsS3Config } from './aws-s3.config';
 
+
 @Injectable()
 export class AwsS3Service {
   private logger = new Logger(AwsS3Service.name);
